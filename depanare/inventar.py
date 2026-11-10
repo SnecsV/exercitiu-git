@@ -23,13 +23,15 @@ def pe_servicii(tinte):
     """Dict: serviciu -> lista de porturi."""
     grupe = {}
     for t in tinte:
-        serviciu = t["serviciu"]
+        # Accesarea cheii "serviciu" din dictionar
+        serviciu = t.get("serviciu")     # Numele cheii din dictionar trebuie luat cu get() pentru a evita erorile daca cheia nu exista.
         port = port_valid(t["port"])
         if port is None:
             print("sar peste", t["gazda"], ": port invalid", t["port"])
             continue
         grupe[serviciu] = []
         grupe[serviciu].append(port)
+    return grupe
 
 
 def peste_prag(tinte, prag):
@@ -47,10 +49,10 @@ def main():
     p.add_argument("fisier")
     p.add_argument("--prag", default=1024)
     a = p.parse_args()
-
+ 
     tinte = incarca(a.fisier)
-    print("Tinte citite: " + str(len(tinte)))   #Denumirea corecta este tinte, nu tinta
-
+    print("Tinte citite: " + str(len(tinte)))   #Denumirea corecta este tinte, nu tinta. 
+                                                # Nu putem concatena un int cu un string, deci am folosit str() pentru a converti int-ul in string.
     grupe = pe_servicii(tinte)
     for serviciu, porturi in grupe.items():
         print(f"{serviciu}: {porturi}")
